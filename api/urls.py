@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework import routers
-from booking.views import index, book, book_now, cancel_room, delete_room, book_confirm, roomApi, booking_api
+from booking.views import room, room_available, book, BookCreate
 
 # route = routers.DefaultRouter()
 # route.register(r'book', viewset=RoomsViewSet)
@@ -8,8 +8,10 @@ from booking.views import index, book, book_now, cancel_room, delete_room, book_
 
 urlpatterns = [
     # path('', include(route.urls)),
-    path('all-rooms/', roomApi),
-    path('book/', booking_api)
+    path('rooms/', room),
+    path('rooms-available/', room_available),
+    path('book/', book),
+    path('book-confirm/', BookCreate.as_view()),
     # path('', index, name='index'),
     # path('book', book, name='book'),
     # path('book-now/<int:id>', book_now, name='book-now'),

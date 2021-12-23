@@ -12,5 +12,8 @@ class RoomsSerializer(serializers.ModelSerializer):
 class BookingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Booking
-        fields = '__all__'
+        # fields = '__all__'
+        fields = ['room_no', 'start_day', 'end_day', 'amount']
 
+    # def create(self, validated_data):
+    #     pass

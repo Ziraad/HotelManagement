@@ -1,5 +1,7 @@
+from django.http import JsonResponse
 from django.shortcuts import render
 from rest_framework import viewsets
+from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.response import Response
@@ -10,8 +12,7 @@ from api.serializers import RoomsSerializer, BookingSerializer
 
 
 @api_view(['GET'])
-
-def roomApi(request):
+def room(request):
     if request.method == 'GET':
         query = Rooms.objects.all()
         serializer = RoomsSerializer(query, many=True)
@@ -19,36 +20,44 @@ def roomApi(request):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-@api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated])
-def booking_api(request):
+@api_view(['GET'])
+def room_available(request):
+    if request.method == 'GET':
+        query = Rooms.objects.filter(is_available=True)
+        serializer = RoomsSerializer(query, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def book(request):
     if request.method == 'GET':
         query = Booking.objects.all()
+        print('booking: ', query)
         serializer = BookingSerializer(query, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    if request.method == 'POST':
+
+class BookCreate(APIView):
+    print('in book confirm')
+    def post(self, request):
         serializer = BookingSerializer(data=request.data)
-        room = Rooms.objects.get(room_no=int(request.data['room_no']))
-        print('room: ', room)
-        if serializer.is_valid():
-            room.is_available = False
-            room.save()
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            if serializer.is_valid():
+                room_no = serializer.data.get('room_no')
+                room = Rooms.objects.get(id=room_no)
+                room.is_available = False
+                room.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        except Exception as e:
+            return Response(str(e))
 
 
 def index(request):
     return render(request, 'booking/index.html', {})
-
-
-def book(request):
-    pass
-
-
-def book_now(request):
-    pass
 
 
 def cancel_room(request):
@@ -58,6 +67,3 @@ def cancel_room(request):
 def delete_room(request):
     pass
 
-
-def book_confirm(request):
-    pass
