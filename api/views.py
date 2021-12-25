@@ -1,12 +1,8 @@
 from datetime import datetime
 
-from django.http import JsonResponse
-from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.generics import RetrieveAPIView
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -17,11 +13,6 @@ from api.serializers import RoomsSerializer, BookingSerializer
 class RoomViewSet(ModelViewSet):
     queryset = Rooms.objects.all()
     serializer_class = RoomsSerializer
-
-
-class BookDetail(RetrieveAPIView):
-    queryset = Booking.objects.all()
-    serializer_class = BookingSerializer
 
 
 @api_view(['GET'])
@@ -38,30 +29,6 @@ class Book(APIView):
         query = Booking.objects.all()
         serializer = BookingSerializer(query, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
-
-    # def post(self, request):
-    #     try:
-    #         start_date = request.data['start_date']
-    #         end_date = request.data['end_date']
-    #         start_date = datetime.strptime(start_date, "%m/%d/%Y").date()
-    #         end_date = datetime.strptime(end_date, "%m/%d/%Y").date()
-    #         no_of_days = (end_date - start_date).days
-    #         room = Rooms.objects.filter(is_available=True, no_of_days_advance__gte=no_of_days,
-    #                                     start_date__lte=start_date)
-    #         if len(room) > 0:
-    #             serializer = RoomsSerializer(room, many=True)
-    #             return Response(serializer.data, status=status.HTTP_200_OK)
-    #         else:
-    #             return Response({'msg': 'No room with this profile was found'}, status=status.HTTP_404_NOT_FOUND)
-    #     except Exception as e:
-    #         return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
-
-
-# @api_view(['GET'])
-# def book_now(requset, id):
-#     query = Rooms.objects.get(room_no=id)
-#     serializer = RoomsSerializer(query)
-#     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class BookConfirm(APIView):
