@@ -37,18 +37,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'django.contrib.sites',
+    # 'django.contrib.sites',
 
     'rest_framework',
     'rest_framework.authtoken',
 
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'dj_rest_auth',
-    'dj_rest_auth.registration',
-
-    'django_filters',
+    # 'allauth',
+    # 'allauth.account',
+    # 'allauth.socialaccount',
+    # 'dj_rest_auth',
+    # 'dj_rest_auth.registration',
 
     'booking',
     'accounts',
@@ -143,20 +141,17 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
-    ],
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    # ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        # 'rest_framework.authentication.BasicAuthentication',
-        # 'rest_framework.authentication.TokenAuthentication',
-        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
-
+        'rest_framework.authentication.BasicAuthentication',
+        # 'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
     ],
-    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
 
-SITE_ID = 1  # dj rest auth
+# SITE_ID = 1  # dj rest auth
 
-REST_USE_JWT = True  # JWT
-JWT_AUTH_COOKIE = 'access'  # JWT
-JWT_AUTH_REFRESH_COOKIE = 'refresh'  # JWT
+# REST_USE_JWT = True  # JWT
+# JWT_AUTH_COOKIE = 'access'  # JWT
+# JWT_AUTH_REFRESH_COOKIE = 'refresh'  # JWT

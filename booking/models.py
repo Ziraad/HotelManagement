@@ -29,7 +29,7 @@ class Booking(models.Model):
     booked_on = models.DateTimeField(auto_now=True, auto_now_add=False)
 
     def __str__(self):
-        return "Booking ID: " + str(self.id)
+        return "Booking ID: {} - Room no: {}".format(self.id, self.room_no.room_no)
 
     @property
     def is_past_due(self):

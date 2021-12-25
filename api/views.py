@@ -30,6 +30,23 @@ class Book(APIView):
         serializer = BookingSerializer(query, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    def post(self, request):
+        try:
+            start_date = request.data['start_date']
+            end_date = request.data['end_date']
+            start_date = datetime.strptime(start_date, "%m/%d/%Y").date()
+            end_date = datetime.strptime(end_date, "%m/%d/%Y").date()
+            no_of_days = (end_date - start_date).days
+            room = Rooms.objects.filter(is_available=True, no_of_days_advance__gte=no_of_days,
+                                        start_date__lte=start_date)
+            if len(room) > 0:
+                serializer = RoomsSerializer(room, many=True)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response({'msg': 'No room with this profile was found'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
+
 
 class BookConfirm(APIView):
     def post(self, request):
