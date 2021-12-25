@@ -1,21 +1,20 @@
 from django.urls import path, include
 from rest_framework import routers
-from booking.views import room, room_available, book, BookCreate
+from .views import RoomViewSet, BookDetail, rooms_available, Book, BookConfirm, BookCancel
 
-# route = routers.DefaultRouter()
-# route.register(r'book', viewset=RoomsViewSet)
+route = routers.DefaultRouter()
+route.register(r'room', viewset=RoomViewSet)
 # route.register(r'book-now', viewset=BookingViewSet)
+app_name = 'api'
 
 urlpatterns = [
-    # path('', include(route.urls)),
-    path('rooms/', room),
-    path('rooms-available/', room_available),
-    path('book/', book),
-    path('book-confirm/', BookCreate.as_view()),
-    # path('', index, name='index'),
-    # path('book', book, name='book'),
+    path('', include(route.urls)),
+    # path('room', RoomViewSet.as_view(), name='room'),
+    path('rooms-available/', rooms_available),
+    path('book/', Book.as_view()),
+    path('book/<int:pk>/', BookDetail.as_view(), name='book_detail'),
+    # path('book-confirm/', BookCreate.as_view()),
     # path('book-now/<int:id>', book_now, name='book-now'),
-    # path('cancel-room/<int:id>', cancel_room, name='cancel-room'),
-    # path('delete-room/<int:id>', delete_room, name='delete-room'),
-    # path('confirm-now-booking', book_confirm, name="book_confirm")
+    path('confirm-now-booking/', BookConfirm.as_view(), name="book_confirm"),
+    path('cancel-room/', BookCancel.as_view(), name='cancel-room'),
 ]
